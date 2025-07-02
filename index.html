@@ -1,208 +1,81 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>harm</title>
-    <link rel="stylesheet" href="css/x.css">
-    <style>
-        /* Font Import:
-           1. Download 'MinecraftStandard.otf' (or 'Minecrafter.ttf').
-           2. Create a 'fonts' folder.
-           3. Place the font file inside.
-        */
-        @font-face {
-            font-family: 'MinecraftStandard';
-            src: url('fonts/MinecraftStandard.otf') format('opentype'); /* Updated format */
-            font-weight: normal;
-            font-style: normal;
-        }
+ <html><head><meta charset="utf-8"><title>harm</title><link rel="stylesheet" href="css/x.css"><style>
+ /* Font Import:
+    1. Download 'MinecraftStandard.otf' (or 'Minecrafter.ttf').
+    2. Create a 'fonts' folder.
+    3. Place the font file inside.
+ */
+ @font-face {
+     font-family: 'MinecraftStandard';
+     src: url('fonts/MinecraftStandard.otf') format('opentype'); /* Updated format */
+     font-weight: normal;
+     font-style: normal;
+ }
 
-        body {
-            margin: 0;
-            overflow-x: hidden; /* Prevent horizontal scrollbar */
-            position: relative; /* To allow absolute positioning of the overlay relative to the body */
-            min-height: 100vh; /* Ensure the body takes at least the full viewport height */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            display: flex;
-            flex-direction: column; /* Allow footer to stick to the bottom */
-            align-items: center; /* Center the content horizontally */
-            background-color: black; /* Ensure background is black for better contrast */
-            color: white; /* Default text color */
-        }
+ body {
+     margin: 0;
+     overflow-x: hidden; /* Prevent horizontal scrollbar */
+     position: relative; /* To allow absolute positioning of the overlay relative to the body */
+     min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+     box-sizing: border-box; /* Include padding and border in the element's total width and height */
+     display: flex;
+     flex-direction: column; /* Allow footer to stick to the bottom */
+     align-items: center; /* Center the content horizontally */
+ }
 
-        center {
-            width: 100%; /* Take full width within the flex container */
-            text-align: center; /* Keep video centered */
-            margin-bottom: auto; /* Push the footer to the bottom */
-        }
+ center {
+     width: 100%; /* Take full width within the flex container */
+     text-align: center; /* Keep video centered */
+     margin-bottom: auto; /* Push the footer to the bottom */
+ }
 
-        video {
-            display: block;
-            margin: 20px auto; /* Add some top margin and center */
-            max-width: 55%;
-            height: auto;
-        }
+ video {
+     display: block;
+     margin: 20px auto; /* Add some top margin and center */
+     max-width: 55%;
+     height: auto;
+ }
 
-        #overlay-text {
-            position: absolute;
-            bottom: 0; /* Stick to the very bottom */
-            left: 0;
-            width: 100%; /* Make it full width */
-            background-color: rgba(0, 0, 0, 0.7); /* Slightly more opaque background */
-            color: white;
-            padding: 10px 0; /* Adjust vertical padding, remove horizontal */
-            text-align: center; /* Center the text horizontally */
-            font-family: 'MinecraftStandard', monospace, sans-serif;
-            font-size: clamp(1em, 3vw, 1.5em); /* Adjust font size for bottom placement */
-            white-space: nowrap; /* Prevent wrapping */
-            z-index: 10;
+ #overlay-text {
+     position: absolute;
+     bottom: 0; /* Stick to the very bottom */
+     left: 0;
+     width: 100%; /* Make it full width */
+     background-color: rgba(0, 0, 0, 0.7); /* Slightly more opaque background */
+     color: white;
+     padding: 10px 0; /* Adjust vertical padding, remove horizontal */
+     text-align: center; /* Center the text horizontally */
+     font-family: 'MinecraftStandard', monospace, sans-serif;
+     font-size: clamp(1em, 3vw, 1.5em); /* Adjust font size for bottom placement */
+     white-space: nowrap; /* Prevent wrapping */
+     z-index: 10;
 
-            /* Smoother Glowing Ripple Effect */
-            background: linear-gradient(90deg,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.6) 30%, /* Adjusted stop */
-                rgba(255, 255, 255, 1) 50%,
-                rgba(255, 255, 255, 0.6) 70%, /* Adjusted stop */
-                rgba(255, 255, 255, 0) 100%
-            );
-            background-size: 200% 100%; /* Slightly reduce size for smoother effect */
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-fill-color: transparent;
-            animation: glowRipple 6s infinite linear; /* Slower animation for smoother look */
-        }
+     /* Smoother Glowing Ripple Effect */
+     background: linear-gradient(90deg,
+         rgba(255, 255, 255, 0) 0%,
+         rgba(255, 255, 255, 0.6) 30%, /* Adjusted stop */
+         rgba(255, 255, 255, 1) 50%,
+         rgba(255, 255, 255, 0.6) 70%, /* Adjusted stop */
+         rgba(255, 255, 255, 0) 100%
+     );
+     background-size: 200% 100%; /* Slightly reduce size for smoother effect */
+     -webkit-background-clip: text;
+     background-clip: text;
+     -webkit-text-fill-color: transparent;
+     text-fill-color: transparent;
+     animation: glowRipple 6s infinite linear; /* Slower animation for smoother look */
+ }
 
-        @keyframes glowRipple {
-            0% {
-                background-position: -100% 0; /* Start off-screen */
-            }
-            100% {
-                background-position: 200% 0; /* Move across */
-            }
-        }
-
-        /* NEW CSS for #exile at the top */
-        #top-exile {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'MinecraftStandard', monospace, sans-serif;
-            font-size: clamp(1.2em, 4vw, 2em);
-            text-decoration: none;
-            color: transparent; /* Text color will be handled by the gradient */
-            white-space: nowrap;
-            z-index: 20; /* Ensure it's above other elements */
-
-            background: linear-gradient(90deg,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(0, 255, 255, 0.8) 30%, /* Cyan glow */
-                rgba(0, 255, 255, 1) 50%,
-                rgba(0, 255, 255, 0.8) 70%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glowRipple 4s infinite linear; /* Faster glow for top element */
-            cursor: pointer;
-        }
-
-        /* Style for the main content area below the logo */
-        .content-area {
-            text-align: center;
-            font-family: 'MinecraftStandard', monospace, sans-serif;
-            color: white;
-            font-size: clamp(0.8em, 2vw, 1.2em);
-            margin-top: 50px; /* Adjust as needed */
-        }
-
-        .content-area img {
-            max-width: 50%; /* Adjust as needed for the logo */
-            height: auto;
-            display: block;
-            margin: 0 auto 20px auto; /* Center the logo and add bottom margin */
-        }
-
-        .sub-text {
-            margin-bottom: 20px;
-            font-size: clamp(1em, 2.5vw, 1.3em);
-            color: #ccc;
-        }
-
-        .names-list {
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 20px; /* Space between names */
-            flex-wrap: wrap; /* Allow names to wrap on smaller screens */
-        }
-
-        .name-clickable {
-            cursor: pointer;
-            text-decoration: none;
-            color: #eee; /* Light gray for names */
-            font-size: clamp(0.9em, 2.2vw, 1.1em);
-            transition: color 0.3s ease;
-        }
-
-        .name-clickable:hover {
-            color: cyan; /* Highlight on hover */
-        }
-
-        #profile-container {
-            display: none; /* Hidden by default */
-            text-align: center;
-            margin-top: 20px;
-            animation: fadeIn 0.5s ease-out; /* Smooth fade-in */
-        }
-
-        #profile-container img {
-            width: clamp(100px, 20vw, 150px); /* Responsive image size */
-            height: auto;
-            border: 2px solid cyan; /* Border for the profile pic */
-            box-shadow: 0 0 15px cyan; /* Glow effect for the pic */
-            cursor: pointer;
-            display: block; /* Remove extra space below image */
-            margin: 0 auto; /* Center the image */
-        }
-
-        #profile-container p {
-            margin-top: 10px;
-            font-size: clamp(0.9em, 2.2vw, 1.1em);
-            color: #aaa;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-    </style>
-</head>
-<body>
-    <a href="https://harm.pw/exile" id="top-exile">#exile</a>
-
-    <div class="content-area">
-        <img src="image_a212a2.png" alt="Logo">
-        <div class="sub-text">harm.pw</div>
-        <div class="names-list">
-            <span class="name-clickable" data-name="lain">lain</span>
-            <span class="name-clickable" data-name="rot">rot</span>
-            <span class="name-clickable" data-name="celly">celly</span>
-            <span class="name-clickable" data-name="juggy">juggy</span>
-        </div>
-
-        <div id="profile-container">
-            </div>
-    </div>
-
-    <center>
-        <video id="x" width="55%" controls=""></video>
-    </center>
-    <div id="overlay-text">© est. 2024 @ exile.</div>
-    <script src="js/x.js"></script>
-</body>
-</html>
+ @keyframes glowRipple {
+     0% {
+         background-position: -100% 0; /* Start off-screen */
+     }
+     100% {
+         background-position: 200% 0; /* Move across */
+     }
+ }
+ </style></head><body>
+     <center>
+         <video id="x" width="55%" controls=""></video>
+     </center>
+     <div id="overlay-text">© est. 2024 @ exile.</div>
+ <script src="js/x.js"></script></body></html>
