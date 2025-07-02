@@ -1,7 +1,33 @@
 <html><head>
-<meta charset="utf-8"><title>harm</title>
+ <meta charset="utf-8"><title>harm</title>
   </head><body><center>
-    <video id="x" width="55%" controls=""></video>
+   <video id="x" width="55%" controls=""></video>
   </center>
-<link rel="stylesheet" href="css/x.css">
-<script src="js/x.js"></script></body></html>
+ <link rel="stylesheet" href="css/x.css">
+ <style>
+ #overlay-text {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2em;
+  text-shadow: 0 0 10px white; /* Glowing effect */
+ }
+ video {
+  position: relative; /* To make the overlay position relative to the video */
+  display: block; /* Prevents extra space below the video */
+  margin: 0 auto; /* Center the video if not already centered by <center> */
+ }
+ body {
+  margin: 0; /* Remove default body margin */
+ }
+ center {
+  display: block; /* Ensure center behaves as expected */
+ }
+ </style>
+ <div id="overlay-text">© est. 2025 @ exile.</div>
+ <script src="js/x.js"></script></body></html>
