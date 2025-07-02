@@ -1,33 +1,93 @@
-<html><head>
- <meta charset="utf-8"><title>harm</title>
-  </head><body><center>
-   <video id="x" width="55%" controls=""></video>
-  </center>
- <link rel="stylesheet" href="css/x.css">
- <style>
- #overlay-text {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 1.2em;
-  text-shadow: 0 0 10px white; /* Glowing effect */
- }
- video {
-  position: relative; /* To make the overlay position relative to the video */
-  display: block; /* Prevents extra space below the video */
-  margin: 0 auto; /* Center the video if not already centered by <center> */
- }
- body {
-  margin: 0; /* Remove default body margin */
- }
- center {
-  display: block; /* Ensure center behaves as expected */
- }
- </style>
- <div id="overlay-text">© est. 2025 @ exile.</div>
- <script src="js/x.js"></script></body></html>
+<html>
+<head>
+<meta charset="utf-8"><title>harm</title>
+<link rel="stylesheet" href="css/x.css">
+<style>
+
+*/
+@font-face {
+    font-family: 'MinecraftStandard';
+    src: url('fonts/MinecraftStandard.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0; /* Remove default body margin */
+    /* Prevents horizontal scrollbar that might appear due to the animation moving off-screen */
+    overflow-x: hidden;
+}
+
+/* Make the <center> tag the positioning context for the overlay text.
+   It also ensures the video is centered and relative to the text. */
+center {
+    position: relative;
+    display: block; /* Ensure it behaves like a block element */
+    width: 100%; /* Take full width */
+    text-align: center; /* Keeps original center tag behavior */
+}
+
+video {
+    display: block; /* Removes extra space below video element */
+    margin: 0 auto; /* Centers the video itself within the <center> tag */
+    max-width: 55%; /* Keeps the video width as specified */
+    height: auto; /* Maintains the video's aspect ratio */
+}
+
+#overlay-text {
+    position: absolute;
+    /* Position relative to the <center> tag, which is the parent */
+    bottom: 20px; /* Distance from the bottom of the video */
+    left: 50%;
+    transform: translateX(-50%); /* Centers the text horizontally */
+
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background for readability */
+    padding: 10px 20px;
+    border-radius: 5px;
+
+    /* Minecraft Font */
+    font-family: 'Minecrafter', monospace, sans-serif; /* Apply the custom font with fallbacks */
+    font-size: clamp(1.2em, 4vw, 2.5em); /* Responsive font size that scales with viewport */
+    white-space: nowrap; /* Prevents the text from wrapping onto multiple lines */
+    z-index: 10; /* Ensures the text appears above the video */
+
+    /* Glowing Ripple Effect */
+    /* Create a linear gradient that moves across the text */
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0%,   /* Start fully transparent white */
+        rgba(255, 255, 255, 0.8) 25%, /* Begin glow */
+        rgba(255, 255, 255, 1) 50%,  /* Peak brightness of the glow */
+        rgba(255, 255, 255, 0.8) 75%, /* End glow */
+        rgba(255, 255, 255, 0) 100%  /* Fully transparent white */
+    );
+    /* Make the gradient much wider than the text so it can move across completely */
+    background-size: 300% 100%;
+    /* Clip the background to the shape of the text */
+    -webkit-background-clip: text; /* For WebKit browsers (Chrome, Safari) */
+    background-clip: text;
+    /* Make the actual text transparent so the background gradient shows through */
+    -webkit-text-fill-color: transparent; /* For WebKit browsers */
+    text-fill-color: transparent; /* Standard property */
+
+    /* Apply the animation */
+    animation: glowRipple 4s infinite linear; /* 4 seconds duration, infinite loop, linear speed */
+}
+
+/* Keyframes for the glow ripple animation */
+@keyframes glowRipple {
+    0% {
+        background-position: -200% 0; /* Start the gradient far left (off-screen) */
+    }
+    100% {
+        background-position: 200% 0; /* Move the gradient far right (off-screen) */
+    }
+}
+</style>
+</head>
+<body>
+    <center>
+        <video id="x" width="55%" controls=""></video>
+        <div id="overlay-text">© est. 2025 @ exile.</div>
+    </center>
+<script src="js/x.js"></script></body>
+</html>
