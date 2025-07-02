@@ -1,0 +1,81 @@
+ <html><head><meta charset="utf-8"><title>harm</title><link rel="stylesheet" href="css/x.css"><style>
+ /* Font Import:
+    1. Download 'MinecraftStandard.otf' (or 'Minecrafter.ttf').
+    2. Create a 'fonts' folder.
+    3. Place the font file inside.
+ */
+ @font-face {
+     font-family: 'MinecraftStandard';
+     src: url('fonts/MinecraftStandard.otf') format('opentype'); /* Updated format */
+     font-weight: normal;
+     font-style: normal;
+ }
+
+ body {
+     margin: 0;
+     overflow-x: hidden; /* Prevent horizontal scrollbar */
+     position: relative; /* To allow absolute positioning of the overlay relative to the body */
+     min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+     box-sizing: border-box; /* Include padding and border in the element's total width and height */
+     display: flex;
+     flex-direction: column; /* Allow footer to stick to the bottom */
+     align-items: center; /* Center the content horizontally */
+ }
+
+ center {
+     width: 100%; /* Take full width within the flex container */
+     text-align: center; /* Keep video centered */
+     margin-bottom: auto; /* Push the footer to the bottom */
+ }
+
+ video {
+     display: block;
+     margin: 20px auto; /* Add some top margin and center */
+     max-width: 55%;
+     height: auto;
+ }
+
+ #overlay-text {
+     position: absolute;
+     bottom: 0; /* Stick to the very bottom */
+     left: 0;
+     width: 100%; /* Make it full width */
+     background-color: rgba(0, 0, 0, 0.7); /* Slightly more opaque background */
+     color: white;
+     padding: 10px 0; /* Adjust vertical padding, remove horizontal */
+     text-align: center; /* Center the text horizontally */
+     font-family: 'MinecraftStandard', monospace, sans-serif;
+     font-size: clamp(1em, 3vw, 1.5em); /* Adjust font size for bottom placement */
+     white-space: nowrap; /* Prevent wrapping */
+     z-index: 10;
+
+     /* Smoother Glowing Ripple Effect */
+     background: linear-gradient(90deg,
+         rgba(255, 255, 255, 0) 0%,
+         rgba(255, 255, 255, 0.6) 30%, /* Adjusted stop */
+         rgba(255, 255, 255, 1) 50%,
+         rgba(255, 255, 255, 0.6) 70%, /* Adjusted stop */
+         rgba(255, 255, 255, 0) 100%
+     );
+     background-size: 200% 100%; /* Slightly reduce size for smoother effect */
+     -webkit-background-clip: text;
+     background-clip: text;
+     -webkit-text-fill-color: transparent;
+     text-fill-color: transparent;
+     animation: glowRipple 6s infinite linear; /* Slower animation for smoother look */
+ }
+
+ @keyframes glowRipple {
+     0% {
+         background-position: -100% 0; /* Start off-screen */
+     }
+     100% {
+         background-position: 200% 0; /* Move across */
+     }
+ }
+ </style></head><body>
+     <center>
+         <video id="x" width="55%" controls=""></video>
+     </center>
+     <div id="overlay-text">© est. 2024 @ exile.</div>
+ <script src="js/x.js"></script></body></html>
