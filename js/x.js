@@ -21,9 +21,9 @@ function animateTitle() {
         currentLetterIndex++;
         setTimeout(animateTitle, 500); // Adjust the delay (in milliseconds) as needed
     } else {
-        // Optional: If you want the animation to loop, uncomment the next two lines
-        // currentLetterIndex = 0;
-        // setTimeout(animateTitle, 1000); // Delay before restarting the loop
+        // Reset the index to start over, and then call the function again after a short delay
+        currentLetterIndex = 0;
+        setTimeout(animateTitle, 1000); // Delay before restarting the animation
     }
 }
 
