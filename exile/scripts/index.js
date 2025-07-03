@@ -90,7 +90,7 @@ function memberCall(pfpSrc, textContent, user) {
 
 function rot() {
     memberCall(
-        "assets/rot_icon.png",
+        "exile/assets/rot_icon.png",
         "<a href='https://numb.lol' target='_blank' style='color: white;'>numb</a>, <a href='https://instagram.com/cyxt' target='_blank' style='color: white;'>instagram</a>",
         "rot"
     );
@@ -98,7 +98,7 @@ function rot() {
 
 function lain() {
     memberCall(
-        "assets/lain_icon.png",
+        "exile/assets/lain_icon.png",
         "<a href='https://namemc.com/_2' target='_blank' style='color: white;'>namemc</a>, <a href='https://instagram.com/axst' target='_blank' style='color: white;'>instagram</a>, <a href='https://x.com/eternallyexile' target='_blank' style='color: white;'>x</a>",
         "lain"
     );
@@ -106,7 +106,7 @@ function lain() {
 
 function op() {
     memberCall(
-        "assets/op_icon.png",
+        "exile/assets/op_icon.png",
         "<a href='https://github.com/tarnishing' target='_blank' style='color: white;'>github</a>, <a href='https://instagram.com/2facd' target='_blank' style='color: white;'>instagram</a>",
         "op"
     );
@@ -172,7 +172,7 @@ function updatePage(htmlContent, pageTitle) {
 
 function about() {
     updatePage(
-        "<a href='https://shame.lol' target='_blank' style='color: white;'>@exile</a> is a cyber collective with a primary focus on coding and various other digital endeavors.",
+        "<a href='https://harm.pw' target='_blank' style='color: white;'>@exile</a> is a cyber collective with a primary focus on coding and various other digital endeavors.",
         "about"
     );
 }
@@ -180,7 +180,7 @@ function about() {
 
 
 function site() {
-    window.open("https://shame.lol", "_blank");
+    window.open("https://harm.pw", "_blank");
 }
 
 
@@ -189,7 +189,7 @@ function site() {
 
 function getRandomSentence() {
     const sentences = [
-        "@ <a href='https://shame.lol' target='_blank' style='color: white;'>exile</a>, a collective"
+        "@ <a href='https://harm.pw' target='_blank' style='color: white;'>exile</a>, a collective"
     ];
     const randomIndex = Math.floor(Math.random() * sentences.length);
     return sentences[randomIndex];
