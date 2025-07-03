@@ -90,7 +90,7 @@ function memberCall(pfpSrc, textContent, user) {
 
 function rot() {
     memberCall(
-        "exile/assets/rot_icon.png",
+        "../assets/rot_icon.png",
         "<a href='https://numb.lol' target='_blank' style='color: white;'>numb</a>, <a href='https://instagram.com/cyxt' target='_blank' style='color: white;'>instagram</a>",
         "rot"
     );
@@ -98,7 +98,7 @@ function rot() {
 
 function lain() {
     memberCall(
-        "exile/assets/lain_icon.png",
+        "../assets/lain_icon.png",
         "<a href='https://namemc.com/_2' target='_blank' style='color: white;'>namemc</a>, <a href='https://instagram.com/axst' target='_blank' style='color: white;'>instagram</a>, <a href='https://x.com/eternallyexile' target='_blank' style='color: white;'>x</a>",
         "lain"
     );
@@ -106,7 +106,7 @@ function lain() {
 
 function op() {
     memberCall(
-        "exile/assets/op_icon.png",
+        "../assets/op_icon.png",
         "<a href='https://github.com/tarnishing' target='_blank' style='color: white;'>github</a>, <a href='https://instagram.com/2facd' target='_blank' style='color: white;'>instagram</a>",
         "op"
     );
