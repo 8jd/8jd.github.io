@@ -10,22 +10,31 @@ const randInd = Math.floor(Math.random() * videos.length);
 const x = videos[randInd];
 document.getElementById("x").src = x;
 
-// Title animation
-const titleElement = document.getElementById("animatedTitle");
-const titleLetters = ["h", "a", "r", "m"];
-let currentLetterIndex = 0;
-
-function animateTitle() {
-    if (currentLetterIndex < titleLetters.length) {
-        titleElement.textContent = titleLetters[currentLetterIndex];
-        currentLetterIndex++;
-        setTimeout(animateTitle, 500); // Adjust the delay (in milliseconds) as needed
-    } else {
-        // Reset the index to start over, and then call the function again after a short delay
-        currentLetterIndex = 0;
-        setTimeout(animateTitle, 1000); // Delay before restarting the animation
+// --- Title animation logic ---
+document.addEventListener('DOMContentLoaded', () => {
+    const titleElement = document.getElementById("animatedTitle");
+    // Fallback if the ID isn't found (though it should be with the HTML above)
+    if (!titleElement) {
+        console.error("Title element with ID 'animatedTitle' not found!");
+        return;
     }
-}
 
-// Start the animation when the page loads
-window.onload = animateTitle;
+    const titleLetters = ["h", "a", "r", "m"];
+    let currentLetterIndex = 0;
+
+    function animateTitle() {
+        if (currentLetterIndex < titleLetters.length) {
+            titleElement.textContent = titleLetters[currentLetterIndex];
+            currentLetterIndex++;
+            setTimeout(animateTitle, 500); // Time between each letter (e.g., 'h' -> 'a')
+        } else {
+            // Animation finished for "harm", reset and start again after a pause
+            currentLetterIndex = 0;
+            setTimeout(animateTitle, 1000); // Pause before restarting the full "h-a-r-m" sequence
+        }
+    }
+
+    // Start the animation
+    animateTitle();
+});
+// --- End title animation logic ---
