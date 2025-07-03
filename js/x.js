@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const titleLetters = ["h", "a", "r", "m"];
+    const titleLetters = ["h", "a", "r", "m", "#|", "#", "#|", "#e|", "#e", "#ex|", "#ex", "#exi|", "#exi", "#exil|", "#exil", "#exile|", "#exile"];
     let currentLetterIndex = 0;
 
     function animateTitle() {
