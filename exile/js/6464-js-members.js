@@ -4,31 +4,26 @@ const profilePic = document.getElementById('profile-pic');
 const profileDesc = document.getElementById('profile-desc');
 
 const profiles = {
-  yuta: {
-    img: 'images/yuta.png',
-    desc: 'i tried to kms',
-    link: 'https://refrain.lol'
+  lain: {
+    img: 'images/lain.png',
+    desc: 'omnipresent',
+    link: 'https://harm.pw'
   },
-  rosie: {
-    img: 'images/rosie.png',
-    desc: 'is suicide too much?',
-    link: 'https://crier.lol'
+  rot: {
+    img: 'images/rot.png',
+    desc: 'you left me to rot',
+    link: 'https://numb.lol'
   },
-  zqmbie: {
-    img: 'images/zqmbie.png',
-    desc: 'rides camels',
-    link: 'https://guns.lol/zpmbiezz'
+  celly: {
+    img: 'images/celly.png',
+    desc: 'good belly',
+    link: 'https://discord.gg/kms'
   },
-  maoshroom: {
-    img: 'images/mao.png',
-    desc: 'stimming and eating lots of chicken',
-    link: 'https://x.com/Le_Maoshroom'
-  },
-  duko: {
-    img: 'images/duko.png',
-    desc: '',
-    link: 'https://guns.lol/duko./'
-  },
+  juggy: {
+    img: 'images/juggy.png',
+    desc: 'juggin\' n finessin',
+    link: 'https://tiktok.com/@100mgs'
+  }
   
 };
 
