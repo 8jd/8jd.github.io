@@ -75,7 +75,17 @@
             animation: glowRipple 6s infinite linear; /* Slower animation for smoother look */
         }
 
-        /* --- New styles for the #exile button --- */
+        @keyframes glowRipple {
+            0% {
+                background-position: -100% 0; /* Start off-screen */
+            }
+            100% {
+                background-position: 200% 0; /* Move across */
+            }
+        }
+    </style>
+</head>
+<body>
     <center>
         <video id="x" width="55%" controls=""></video>
     </center>
