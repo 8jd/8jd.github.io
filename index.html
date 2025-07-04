@@ -119,16 +119,19 @@
             }
         }
 
-        /* New styles for the views container and view count */
+        /* Updated styles for the views container and view count */
         .views-container {
-            display: flex; /* Use flexbox to center content */
-            justify-content: center; /* Center horizontally */
+            position: absolute; /* Position absolutely relative to the body */
+            top: 10px; /* Move it 10px from the top */
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for its own width to truly center */
+            display: flex;
+            justify-content: center;
             align-items: center;
-            margin: 20px auto 10px auto; /* Add some margin, center horizontally, push down from video */
-            color: #d8d8d8; /* Ensure icon and text color is visible */
-            font-size: clamp(1em, 3vw, 1.5em); /* Match overlay-text font size */
-            font-family: 'MinecraftStandard', monospace, sans-serif; /* Apply font to container */
-            z-index: 10; /* Ensure it's above other content if needed */
+            color: #d8d8d8;
+            font-size: clamp(1em, 3vw, 1.5em);
+            font-family: 'MinecraftStandard', monospace, sans-serif;
+            z-index: 10;
         }
 
         .views {
@@ -144,9 +147,6 @@
 </head>
 <body>
     <a href="https://harm.pw/exile" id="exile-button">#exile</a>
-    <center>
-        <video id="x" width="55%" controls=""></video>
-    </center>
     <!-- Moved views-container here, above the overlay-text -->
     <div class="views-container">
         <div class="views view-tooltip" data-text="Views">
@@ -156,6 +156,9 @@
             <span id="viewCount">0</span> <!-- Set initial to 0, will be updated by JS -->
         </div>
     </div>
+    <center>
+        <video id="x" width="55%" controls=""></video>
+    </center>
     <div id="overlay-text">© est. 2024 @ exile.</div>
 
     <script src="js/x.js"></script>
