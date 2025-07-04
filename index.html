@@ -7,8 +7,7 @@
 <meta name="theme-color" content="#000000">
 <head>
     <meta charset="utf-8">
-    <title id="animatedTitle">h</title>
-    <link rel="stylesheet" href="css/x.css">
+    <title id="animatedTitle">h</title> <link rel="stylesheet" href="css/x.css">
     <style>
         /* Font Import:
             1. Download 'MinecraftStandard.otf' (or 'Minecrafter.ttf').
@@ -107,7 +106,6 @@
             text-fill-color: transparent;
             animation: glowRipple 6s infinite linear;
         }
-
         /* --- End of new styles --- */
 
         @keyframes glowRipple {
@@ -118,175 +116,14 @@
                 background-position: 200% 0; /* Move across */
             }
         }
-
-        /* Updated styles for the views container and view count */
-        .views-container {
-            position: absolute; /* Position absolutely relative to the body */
-            top: 10px; /* Move it 10px from the top */
-            left: 50%; /* Center horizontally */
-            transform: translateX(-50%); /* Adjust for its own width to truly center */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #d8d8d8;
-            font-size: clamp(1em, 3vw, 1.5em);
-            font-family: 'MinecraftStandard', monospace, sans-serif;
-            z-index: 10;
-        }
-
-        .views {
-            display: flex;
-            align-items: center;
-            gap: 5px; /* Space between icon and number */
-        }
-
-        #viewCount {
-            font-family: 'MinecraftStandard', monospace, sans-serif; /* Ensure span explicitly gets the font */
-        }
     </style>
 </head>
 <body>
     <a href="https://harm.pw/exile" id="exile-button">#exile</a>
-    <!-- Moved views-container here, above the overlay-text -->
-    <div class="views-container">
-        <div class="views view-tooltip" data-text="Views">
-            <svg width="18px" height="18px" fill="#d8d8d8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"/>
-            </svg>
-            <span id="viewCount">0</span> <!-- Set initial to 0, will be updated by JS -->
-        </div>
-    </div>
     <center>
         <video id="x" width="55%" controls=""></video>
     </center>
     <div id="overlay-text">© est. 2024 @ exile.</div>
-
     <script src="js/x.js"></script>
-    <!-- Firebase and view counter script -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Get app ID and Firebase config from global variables
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-
-        let app;
-        let db;
-        let auth;
-        let isAuthReady = false; // Flag to indicate if Firebase auth is ready
-
-        /**
-         * Initializes Firebase application and sets up authentication listener.
-         * This function will sign in the user using a custom token if available,
-         * otherwise it will sign in anonymously.
-         */
-        const initFirebase = async () => {
-            try {
-                // Initialize Firebase app
-                app = initializeApp(firebaseConfig);
-                // Get Firestore and Auth service instances
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Listen for authentication state changes
-                onAuthStateChanged(auth, async (user) => {
-                    if (!user) {
-                        // If no user is authenticated, try to sign in
-                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                            // Sign in with custom token if provided
-                            await signInWithCustomToken(auth, __initial_auth_token);
-                        } else {
-                            // Sign in anonymously if no custom token
-                            await signInAnonymously(auth);
-                        }
-                    }
-                    // Set auth ready flag to true once authentication is handled
-                    isAuthReady = true;
-                    console.log("Firebase Auth Ready. User UID:", auth.currentUser?.uid);
-                    // Once authenticated, set up the view counter
-                    setupViewCounter();
-                });
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-            }
-        };
-
-        /**
-         * Sets up the live view counter functionality using Firestore.
-         * It increments the view count on page load and listens for real-time updates.
-         */
-        const setupViewCounter = () => {
-            // Ensure Firebase database and authentication are ready
-            if (!db || !isAuthReady) {
-                console.warn("Firebase not ready for view counter setup.");
-                return;
-            }
-
-            // Reference to the view count document in Firestore
-            // Stored in a public collection under the app ID
-            const viewCountRef = doc(db, `artifacts/${appId}/public/data/viewCounts/mainViewCount`);
-            // Get the HTML element where the view count will be displayed
-            const viewCountElement = document.getElementById('viewCount');
-
-            if (!viewCountElement) {
-                console.error("View count display element not found!");
-                return;
-            }
-
-            /**
-             * Increments the view count in Firestore using a transaction.
-             * Transactions ensure atomic updates, preventing race conditions.
-             */
-            const incrementViewCount = async () => {
-                try {
-                    await runTransaction(db, async (transaction) => {
-                        // Get the current state of the document within the transaction
-                        const sfDoc = await transaction.get(viewCountRef);
-                        let newCount = 1; // Default to 1 if document doesn't exist
-
-                        if (sfDoc.exists()) {
-                            // If document exists, get current count and increment
-                            const currentCount = sfDoc.data().count || 0;
-                            newCount = currentCount + 1;
-                        }
-                        // Set the new count back to the document
-                        transaction.set(viewCountRef, { count: newCount }, { merge: true });
-                    });
-                    console.log("View count incremented successfully.");
-                } catch (e) {
-                    console.error("Transaction failed to increment view count: ", e);
-                }
-            };
-
-            /**
-             * Sets up a real-time listener for the view count document.
-             * Updates the HTML element whenever the count changes in Firestore.
-             */
-            onSnapshot(viewCountRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    // If document exists, display its current count
-                    const count = docSnap.data().count;
-                    viewCountElement.textContent = count;
-                    console.log("Live view count updated to:", count);
-                } else {
-                    // If document does not exist (e.g., first load), display 0
-                    console.log("View count document not found, initializing display to 0.");
-                    viewCountElement.textContent = 0;
-                }
-            }, (error) => {
-                console.error("Error listening to view count updates:", error);
-            });
-
-            // Call the increment function immediately after setup to record the current page view
-            incrementViewCount();
-        };
-
-        // Initialize Firebase when the entire window content (including images, scripts) has loaded
-        window.addEventListener('load', initFirebase);
-    </script>
-    <!-- Cloudflare beacon script -->
-    <script src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" xintegrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"959bc9234a7a7ad2","version":"2025.6.2","r":1,"token":"45b56ccb387a40e79d05e3c9a9fc6589","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
 </body>
 </html>
