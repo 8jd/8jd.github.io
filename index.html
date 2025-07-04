@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html>
+<meta property="og:type" content="website">
+<meta property="og:title" content="harm">
+<meta property="og:description" content="#exile">
+<meta property="og:url" content="https://harm.pw">
+<meta name="theme-color" content="#000000">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="animatedTitle">h</title>
     <link rel="stylesheet" href="css/x.css">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="harm">
-    <meta property="og:description" content="#exile">
-    <meta property="og:url" content="https://harm.pw">
-    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Tailwind CSS for styling the counter -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React and ReactDOM for the counter component -->
     <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+    <!-- Babel Standalone for in-browser JSX transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Firebase SDKs (v8 compatible for global access) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
         /* Font Import:
@@ -165,14 +172,9 @@
     <script src="js/x.js"></script>
 
     <!-- React App component for the view counter -->
-    <script type="module">
-        // Firebase SDKs (modular imports)
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
+    <script type="text/babel">
         // Define the React App component directly within the HTML script
-        const App = () => {
+        const ViewCounter = () => {
             // State variables to hold Firebase instances and user ID
             const [db, setDb] = React.useState(null);
             const [auth, setAuth] = React.useState(null);
@@ -190,10 +192,10 @@
                     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
                     // Initialize Firebase app
-                    const app = initializeApp(firebaseConfig);
+                    const app = firebase.initializeApp(firebaseConfig);
                     // Get Firestore and Auth instances
-                    const firestore = getFirestore(app);
-                    const firebaseAuth = getAuth(app);
+                    const firestore = firebase.firestore();
+                    const firebaseAuth = firebase.auth();
 
                     setDb(firestore);
                     setAuth(firebaseAuth);
@@ -201,22 +203,22 @@
                     // Sign in with custom token if available, otherwise anonymously
                     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                     if (initialAuthToken) {
-                        signInWithCustomToken(firebaseAuth, initialAuthToken)
+                        firebaseAuth.signInWithCustomToken(initialAuthToken)
                             .then(() => console.log('Signed in with custom token'))
                             .catch((err) => {
                                 console.error('Error signing in with custom token:', err);
-                                signInAnonymously(firebaseAuth)
+                                firebaseAuth.signInAnonymously()
                                     .then(() => console.log('Signed in anonymously after custom token failure'))
                                     .catch((anonErr) => setError(`Authentication error: ${anonErr.message}`));
                             });
                     } else {
-                        signInAnonymously(firebaseAuth)
+                        firebaseAuth.signInAnonymously()
                             .then(() => console.log('Signed in anonymously'))
                             .catch((anonErr) => setError(`Authentication error: ${anonErr.message}`));
                     }
 
                     // Listen for authentication state changes
-                    const unsubscribeAuth = onAuthStateChanged(firebaseAuth, (user) => {
+                    const unsubscribeAuth = firebaseAuth.onAuthStateChanged((user) => {
                         if (user) {
                             // Set the user ID once authenticated
                             setUserId(user.uid);
@@ -245,18 +247,18 @@
 
                 // Define the path to the public view count document
                 const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const viewCountDocRef = doc(db, `artifacts/${appId}/public/data/viewCounts`, 'websiteViews');
+                const viewCountDocRef = db.collection(`artifacts/${appId}/public/data/viewCounts`).doc('websiteViews');
 
                 // Function to increment the view count
                 const incrementView = async () => {
                     try {
-                        const docSnap = await getDoc(viewCountDocRef);
+                        const docSnap = await viewCountDocRef.get();
                         let currentCount = 0;
-                        if (docSnap.exists()) { // For v9+, docSnap.exists() is a method
+                        if (docSnap.exists) { // For v8, docSnap.exists is a boolean property
                             currentCount = docSnap.data().count || 0;
                         }
                         const newCount = currentCount + 1;
-                        await setDoc(viewCountDocRef, { count: newCount }, { merge: true });
+                        await viewCountDocRef.set({ count: newCount }, { merge: true });
                         console.log('View count incremented to:', newCount);
                     } catch (err) {
                         console.error('Error incrementing view count:', err);
@@ -268,8 +270,8 @@
                 incrementView();
 
                 // Set up a real-time listener for the view count
-                const unsubscribeSnapshot = onSnapshot(viewCountDocRef, (docSnap) => {
-                    if (docSnap.exists()) {
+                const unsubscribeSnapshot = viewCountDocRef.onSnapshot((docSnap) => {
+                    if (docSnap.exists) {
                         const data = docSnap.data();
                         setViewCount(data.count || 0);
                     } else {
@@ -310,7 +312,7 @@
         };
 
         // Render the React App component into the 'view-counter-root' div
-        ReactDOM.render(<App />, document.getElementById('view-counter-root'));
+        ReactDOM.render(<ViewCounter />, document.getElementById('view-counter-root'));
     </script>
 </body>
 </html>
