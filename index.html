@@ -6,24 +6,17 @@
 <meta property="og:url" content="https://harm.pw">
 <meta name="theme-color" content="#000000">
 <head>
+    <div class="views-container">
+    <div class="views view-tooltip" data-text="Views">
+        <svg width="18px" height="18px" fill="#d8d8d8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.757 0-5-2.243-5-5s2.243-5 5-5 5 2.243 5 5-2.243 5-5 5zm0-8c-1.654 0-3 1.346-3 3s1.346 3 3 3 3-1.346 3-3-1.346-3-3-3z"/>
+        </svg>
+
+        <span id="viewCount">2</span>
+    </div>
+</div>
     <meta charset="utf-8">
-    <title id="animatedTitle">h</title>
-    <link rel="stylesheet" href="css/x.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Tailwind CSS for styling the counter -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React and ReactDOM for the counter component -->
-    <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
-    <!-- Babel Standalone for in-browser JSX transpilation -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- Firebase SDKs (v8 compatible for global access) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
+    <title id="animatedTitle">h</title> <link rel="stylesheet" href="css/x.css">
     <style>
         /* Font Import:
             1. Download 'MinecraftStandard.otf' (or 'Minecrafter.ttf').
@@ -132,31 +125,6 @@
                 background-position: 200% 0; /* Move across */
             }
         }
-
-        /* Custom styles for the view counter container */
-        #view-counter-container {
-            position: fixed; /* Fixed position relative to the viewport */
-            bottom: 10px; /* 10px from the bottom */
-            left: 10px; /* 10px from the left */
-            z-index: 20; /* Ensure it's above other content */
-            font-family: 'MinecraftStandard', monospace, sans-serif; /* Use your custom font */
-            color: white; /* White text color */
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-            padding: 8px 12px; /* Padding around the text */
-            border-radius: 8px; /* Slightly rounded corners */
-            font-size: 1em; /* Base font size */
-            display: flex;
-            align-items: center;
-            gap: 8px; /* Space between icon and text */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-            white-space: nowrap; /* Prevent wrapping */
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Subtle text glow */
-        }
-
-        #view-counter-container .counter-text {
-            font-size: 1.2em; /* Slightly larger for the number */
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -165,154 +133,6 @@
         <video id="x" width="55%" controls=""></video>
     </center>
     <div id="overlay-text">© est. 2024 @ exile.</div>
-
-    <!-- Div where the React view counter will be mounted -->
-    <div id="view-counter-root"></div>
-
     <script src="js/x.js"></script>
-
-    <!-- React App component for the view counter -->
-    <script type="text/babel">
-        // Define the React App component directly within the HTML script
-        const ViewCounter = () => {
-            // State variables to hold Firebase instances and user ID
-            const [db, setDb] = React.useState(null);
-            const [auth, setAuth] = React.useState(null);
-            const [userId, setUserId] = React.useState(null);
-            const [viewCount, setViewCount] = React.useState(0);
-            const [loading, setLoading] = React.useState(true);
-            const [error, setError] = React.useState(null);
-
-            // Initialize Firebase and handle authentication
-            React.useEffect(() => {
-                try {
-                    // Retrieve Firebase configuration from global variable
-                    const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-                    // Retrieve app ID from global variable
-                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-                    // Initialize Firebase app
-                    const app = firebase.initializeApp(firebaseConfig);
-                    // Get Firestore and Auth instances
-                    const firestore = firebase.firestore();
-                    const firebaseAuth = firebase.auth();
-
-                    setDb(firestore);
-                    setAuth(firebaseAuth);
-
-                    // Sign in with custom token if available, otherwise anonymously
-                    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                    if (initialAuthToken) {
-                        firebaseAuth.signInWithCustomToken(initialAuthToken)
-                            .then(() => console.log('Signed in with custom token'))
-                            .catch((err) => {
-                                console.error('Error signing in with custom token:', err);
-                                firebaseAuth.signInAnonymously()
-                                    .then(() => console.log('Signed in anonymously after custom token failure'))
-                                    .catch((anonErr) => setError(`Authentication error: ${anonErr.message}`));
-                            });
-                    } else {
-                        firebaseAuth.signInAnonymously()
-                            .then(() => console.log('Signed in anonymously'))
-                            .catch((anonErr) => setError(`Authentication error: ${anonErr.message}`));
-                    }
-
-                    // Listen for authentication state changes
-                    const unsubscribeAuth = firebaseAuth.onAuthStateChanged((user) => {
-                        if (user) {
-                            // Set the user ID once authenticated
-                            setUserId(user.uid);
-                            setLoading(false);
-                        } else {
-                            setUserId(null);
-                            setLoading(false);
-                        }
-                    });
-
-                    // Cleanup function for auth listener
-                    return () => unsubscribeAuth();
-                } catch (err) {
-                    console.error("Firebase initialization error:", err);
-                    setError(`Initialization error: ${err.message}`);
-                    setLoading(false);
-                }
-            }, []); // Empty dependency array ensures this runs only once on mount
-
-            // Effect to handle view count increment and real-time updates
-            React.useEffect(() => {
-                // Ensure db and userId are available before proceeding
-                if (!db || !userId) {
-                    return;
-                }
-
-                // Define the path to the public view count document
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const viewCountDocRef = db.collection(`artifacts/${appId}/public/data/viewCounts`).doc('websiteViews');
-
-                // Function to increment the view count
-                const incrementView = async () => {
-                    try {
-                        const docSnap = await viewCountDocRef.get();
-                        let currentCount = 0;
-                        if (docSnap.exists) { // For v8, docSnap.exists is a boolean property
-                            currentCount = docSnap.data().count || 0;
-                        }
-                        const newCount = currentCount + 1;
-                        await viewCountDocRef.set({ count: newCount }, { merge: true });
-                        console.log('View count incremented to:', newCount);
-                    } catch (err) {
-                        console.error('Error incrementing view count:', err);
-                        setError(`Failed to update view count: ${err.message}`);
-                    }
-                };
-
-                // Increment view count on component mount (first load)
-                incrementView();
-
-                // Set up a real-time listener for the view count
-                const unsubscribeSnapshot = viewCountDocRef.onSnapshot((docSnap) => {
-                    if (docSnap.exists) {
-                        const data = docSnap.data();
-                        setViewCount(data.count || 0);
-                    } else {
-                        setViewCount(0);
-                    }
-                }, (err) => {
-                    console.error('Error listening to view count:', err);
-                    setError(`Real-time update error: ${err.message}`);
-                });
-
-                // Cleanup function for the snapshot listener
-                return () => unsubscribeSnapshot();
-            }, [db, userId]); // Re-run if db or userId changes
-
-            // Render loading, error, or the view counter
-            if (loading) {
-                return <div className="text-white text-sm">Loading...</div>;
-            }
-
-            if (error) {
-                return <div className="text-red-400 text-sm">Error: {error}</div>;
-            }
-
-            return (
-                <div id="view-counter-container">
-                    {/* Eye icon using SVG for a small, clear graphic */}
-                    <svg className="w-5 h-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path>
-                    </svg>
-                    <span className="counter-text">{viewCount}</span>
-                    {/* Optionally display user ID for debugging/identification, can be removed */}
-                    {/* {userId && (
-                        <span className="text-xs text-gray-400 ml-2">(ID: {userId.substring(0, 4)}...)</span>
-                    )} */}
-                </div>
-            );
-        };
-
-        // Render the React App component into the 'view-counter-root' div
-        ReactDOM.render(<ViewCounter />, document.getElementById('view-counter-root'));
-    </script>
 </body>
 </html>
